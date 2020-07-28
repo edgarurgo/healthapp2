@@ -1,0 +1,548 @@
+<SmoothButton@Button>:
+    background_color: (0,0,0,0)
+    background_normal:''
+    back_color_normal: (1,0,1,1)
+    back_color_pressed: (0,0,0,0)
+    border_radius: [30, 30, 30, 30]
+    canvas.before:
+        Color:
+            rgba: self.back_color_normal if self.state == 'normal' else self.back_color_pressed
+        RoundedRectangle:
+            size: self.size
+            pos: self.pos
+            radius: self.border_radius
+
+WindowManager:
+    LogInWindow:
+    MainWindow:
+    MealWindow_egg:
+    MealWindow_oat:
+    MealWindow_rice:
+    MealWindow_tuna:
+    MealWindow_galleta:
+    NewUserWindow:
+    AddNewMealWindow:
+
+<LogInWindow>:
+    name: 'windowlogin'
+    BoxLayout:
+        id: first_box
+        spacing: 10
+        padding: 0, 150, 0, 0
+        orientation: 'vertical'
+        Image:
+            source: 'eglogo.png'
+        TextInput:
+            id: first_text
+            focus : True
+            multiline: False
+            size_hint_y: None
+            size_hint_x: 0.33
+            height: 40
+            pos_hint: {'x': 0.33, 'y': 0}
+            font_size: 20
+            text:'edgarurgo'
+            hint_text: 'UserName'
+            on_text_validate: second_text.focus = True
+        TextInput:
+            id: second_text
+            multiline: False
+            size_hint_y:None
+            size_hint_x:.33
+            height:40
+            pos_hint: {'x': 0.33, 'y': 0}
+            font_size: 20
+            text: '1234'
+            password: True
+            hint_text: 'Password'
+        SmoothButton:
+            id:signin_button
+            text: 'SignIn'
+            size_hint_y:None
+            size_hint_x:.33
+            height:40
+            pos_hint:{'x': 0.33, 'y': 0}
+            font_size:20
+            back_color_normal: rgba('#15c227')
+            border_radius: [15, 0, 15, 0]
+            on_release: root.validate_user()
+
+        SmoothButton:
+            id:account_button
+            text:'Create Account'
+            size_hint_y:None
+            size_hint_x: 0.33
+            height: 40
+            pos_hint:{'x': 0.33, 'y': 0}
+            font_size:20
+            back_color_normal: rgba('#f25b0a')
+            border_radius: [15, 0, 15, 0]
+            on_release:
+                first_text.text = ''
+                second_text.text = ''
+                first_label.text = ''
+                root.manager.transition.direction = 'down'
+                root.manager.current = 'windownewuser'
+
+        Label:
+            id: first_label
+            markup: True
+            text: ''
+
+<NewUserWindow>:
+    name: 'windownewuser'
+    BoxLayout:
+        canvas.before:
+            Color:
+                rgba: 1,1,1,1
+
+            Rectangle:
+                source: 'newuser.png'
+                size: self.size
+                pos: self.pos
+
+        Label:
+            text:''
+        BoxLayout:
+            orientation: 'vertical'
+            padding: 0 , 100, 10, 10
+            spacing: 30
+            TextInput:
+                id: newusername
+                hint_text: 'username'
+                size_hint_y: None
+                height: 35
+                multiline:False
+                on_text_validate: newname.focus = True
+            TextInput:
+                id: newname
+                hint_text: 'name'
+                size_hint_y: None
+                height: 35
+                multiline:False
+                on_text_validate: newlast.focus = True
+            TextInput:
+                id: newlast
+                hint_text: 'last name'
+                size_hint_y: None
+                height: 35
+                multiline:False
+                on_text_validate: newemail.focus = True
+            TextInput:
+                id:newemail
+                hint_text: 'e-mail'
+                size_hint_y: None
+                height: 35
+                multiline:False
+                on_text_validate: newpassword.focus = True
+            TextInput:
+                id: newpassword
+                password: True
+                hint_text: 'password'
+                size_hint_y: None
+                height: 35
+                multiline:False
+                on_text_validate: newrepassword.focus = True
+            TextInput:
+                id: newrepassword
+                password: True
+                size_hint_y: None
+                height: 35
+                hint_text: 're-password'
+                multiline:False
+            BoxLayout:
+                spacing: 20
+                SmoothButton:
+                    text:'Create User'
+                    size_hint_y: None
+                    height: 50
+                    back_color_normal: rgba('#f25b0a')
+                    border_radius: [15, 0, 15, 0]
+                    on_release: root.create_newuser()
+
+                SmoothButton:
+                    text:'Return'
+                    size_hint_y: None
+                    height: 50
+                    back_color_normal: rgba('#f25b0a')
+                    border_radius: [15, 0, 15, 0]
+                    on_release:
+                        newuserstatus.text = ''
+                        newusername.text = ''
+                        newname.text = ''
+                        newlast.text = ''
+                        newemail.text = ''
+                        newpassword.text = ''
+                        newrepassword.text = ''
+                        root.manager.transition.direction = 'up'
+                        root.manager.current = 'windowlogin'
+
+            Label:
+                id: newuserstatus
+                bold: True
+                markup: True
+                text: ''
+
+<MainWindow>:
+    name: 'windowmain'
+    BoxLayout:
+        orientation: 'vertical'
+        padding: 0,10
+        Image:
+            size_hint_y: None
+            height: 150
+            source: 'profilepic.png'
+        BoxLayout:
+            orientation: 'vertical'
+            Label:
+                text: 'Welcome:'
+            Label:
+                bold: True
+                font_size: 30
+                text: root.manager.manager_name + ' ' + root.manager.manager_last
+            Label:
+                text: 'Your Current calorie intake is:'
+            Label:
+                id: current_calories
+                bold:True
+                font_size: 50
+                text: '1500'
+            Label:
+                text: 'Your calorie Goal for today is:'
+            Label:
+                bold:True
+                font_size: 50
+                text: '1850' #add the value of calories to eat today
+            Label:
+                text: 'Your exercise routine for today is:'
+            Label:
+                font_size: 20
+                bold: True
+                text: 'Asylum Back to Core' #add the exercise for today
+            Label:
+                text: 'Exercise Status:'
+            Label:
+                id: status_temp
+                font_size: 20
+                bold: True
+                text: '' #update once the routine is done
+        BoxLayout:
+            BoxLayout:
+                spacing: 10
+                padding: 10, 10
+                orientation:'vertical'
+                SmoothButton:
+                    back_color_normal: rgba('#1e7de3')
+                    border_radius: [30, 0, 0, 30]
+                    text:'Update Data'
+                    bold:True
+                    on_release: root.update_currentuser()
+
+                SmoothButton:
+                    back_color_normal: rgba('#1e7de3')
+                    border_radius: [30, 0, 0, 30]
+                    text: 'Week Summary'
+                    bold:True
+                SmoothButton:
+                    back_color_normal: rgba('#1e7de3')
+                    border_radius: [30, 0, 0, 30]
+                    text:'Return'
+                    bold:True
+                    on_release:
+                        root.manager.transition.direction = "right"
+                        root.manager.current = 'windowlogin'
+
+            BoxLayout:
+                spacing: 10
+                padding: 10, 10
+                orientation: 'vertical'
+                SmoothButton:
+                    back_color_normal: rgba('#1e7de3')
+                    border_radius: [0, 30, 30, 0]
+                    text: 'Add Meal'
+                    bold:True
+                    on_release:
+                        root.manager.transition.direction = 'left'
+                        root.manager.current = 'windowmealegg'
+                SmoothButton:
+                    back_color_normal: rgba('#1e7de3')
+                    border_radius: [0, 30, 30, 0]
+                    text: 'Add other Meal'
+                    bold:True
+                    on_release:
+                        root.manager.transition.direction = 'left'
+                        root.manager.current = 'windowaddnewmeal'
+                SmoothButton:
+                    back_color_normal: rgba('#1e7de3')
+                    border_radius: [0, 30, 30, 0]
+                    text: 'Add Exercise'
+                    bold:True
+
+<MealWindow_egg>:
+    name: 'windowmealegg'
+    BoxLayout:
+        orientation: 'vertical'
+        padding: 20,20
+        Image:
+            source: 'meals\\egg_sandwich.png'
+        BoxLayout:
+            orientation:'vertical'
+            Label:
+                font_size: 40
+                bold: True
+                text: 'Egg Sandwich'
+            Label:
+                text: 'Calories per meal:'
+            Label:
+                font_size: 40
+                bold: True
+                text: '408'
+            Label:
+                id:eggstatus
+                markup: True
+                text:''
+        BoxLayout:
+            orientation: 'vertical'
+            spacing: 20
+            SmoothButton:
+                text: 'Add Meal'
+                back_color_normal: rgba('#ff6200')
+                on_release:
+                    root.inserteggmeal()
+            SmoothButton:
+                text: 'Next Meal'
+                back_color_normal: rgba('#ff6200')
+                on_release:
+                    eggstatus.text = ''
+                    root.manager.transition.direction = "up"
+                    root.manager.current = 'windowmealoat'
+            SmoothButton:
+                text: 'Return'
+                back_color_normal: rgba('#ff6200')
+                on_press:
+                    eggstatus.text = ''
+                    root.manager.transition.direction = "right"
+                    root.manager.current = 'windowmain'
+
+<MealWindow_oat>:
+    name: 'windowmealoat'
+    BoxLayout:
+        orientation: 'vertical'
+        padding: 20,20
+        Image:
+            source: 'meals\\oats.png'
+        BoxLayout:
+            orientation:'vertical'
+            Label:
+                font_size: 40
+                bold: True
+                text: 'Overnight Oats'
+            Label:
+                text: 'Calories per meal:'
+            Label:
+                font_size: 40
+                bold: True
+                text: '483'
+            Label:
+                id:oatstatus
+                markup: True
+                text:''
+        BoxLayout:
+            orientation: 'vertical'
+            spacing: 20
+            SmoothButton:
+                text: 'Add Meal'
+                back_color_normal: rgba('#5e2908')
+                on_release:
+                    root.insertoatmeal()
+            SmoothButton:
+                text: 'Next Meal'
+                back_color_normal: rgba('#5e2908')
+                on_release:
+                    oatstatus.text = ''
+                    root.manager.transition.direction = "up"
+                    root.manager.current = 'windowmealrice'
+            SmoothButton:
+                text: 'Return'
+                back_color_normal: rgba('#5e2908')
+                on_press:
+                    oatstatus.text = ''
+                    root.manager.transition.direction = "right"
+                    root.manager.current = 'windowmain'
+
+<MealWindow_rice>:
+    name: 'windowmealrice'
+    BoxLayout:
+        orientation: 'vertical'
+        padding: 20,20
+        Image:
+            source: 'meals\\rice_beans.png'
+        BoxLayout:
+            orientation:'vertical'
+            Label:
+                font_size: 40
+                bold: True
+                text: 'Black Beans with Rice'
+            Label:
+                text: 'Calories per meal:'
+            Label:
+                font_size: 40
+                bold: True
+                text: '265'
+            Label:
+                id:ricestatus
+                markup: True
+                text:''
+        BoxLayout:
+            orientation: 'vertical'
+            spacing: 20
+            SmoothButton:
+                text: 'Add Meal'
+                back_color_normal: rgba('#bf1313')
+                on_release:
+                    root.insertricemeal()
+            SmoothButton:
+                text: 'Next Meal'
+                back_color_normal: rgba('#bf1313')
+                on_release:
+                    ricestatus.text = ''
+                    root.manager.transition.direction = "up"
+                    root.manager.current = 'windowmealtuna'
+            SmoothButton:
+                text: 'Return'
+                back_color_normal: rgba('#bf1313')
+                on_press:
+                    ricestatus.text = ''
+                    root.manager.transition.direction = "right"
+                    root.manager.current = 'windowmain'
+
+<MealWindow_tuna>:
+    name: 'windowmealtuna'
+    BoxLayout:
+        orientation: 'vertical'
+        padding: 20,20
+        Image:
+            source: 'meals\\tuna_salad.png'
+        BoxLayout:
+            orientation:'vertical'
+            Label:
+                font_size: 40
+                bold: True
+                text: 'Tuna Salad'
+            Label:
+                text: 'Calories per meal:'
+            Label:
+                font_size: 40
+                bold: True
+                text: '375'
+            Label:
+                id:tunastatus
+                markup: True
+                text:''
+        BoxLayout:
+            orientation: 'vertical'
+            spacing: 20
+            SmoothButton:
+                text: 'Add Meal'
+                back_color_normal: rgba('#1215c9')
+                on_release:
+                    root.inserttunameal()
+            SmoothButton:
+                text: 'Next Meal'
+                back_color_normal: rgba('#1215c9')
+                on_release:
+                    tunastatus.text = ''
+                    root.manager.transition.direction = "up"
+                    root.manager.current = 'windowmealgalleta'
+            SmoothButton:
+                text: 'Return'
+                back_color_normal: rgba('#1215c9')
+                on_press:
+                    tunastatus.text = ''
+                    root.manager.transition.direction = "right"
+                    root.manager.current = 'windowmain'
+
+<MealWindow_galleta>:
+    name: 'windowmealgalleta'
+    BoxLayout:
+        orientation: 'vertical'
+        padding: 20,20
+        Image:
+            source: 'meals\\galletas.png'
+        BoxLayout:
+            orientation:'vertical'
+            Label:
+                font_size: 40
+                bold: True
+                text: 'Galleta de Lenteja'
+            Label:
+                text: 'Calories per meal:'
+            Label:
+                font_size: 40
+                bold: True
+                text: '130'
+            Label:
+                id:galletastatus
+                markup: True
+                text:''
+        BoxLayout:
+            orientation: 'vertical'
+            spacing: 20
+            SmoothButton:
+                text: 'Add Meal'
+                back_color_normal: rgba('#3c0478')
+                on_release:
+                    root.inesrtgalletameal()
+            SmoothButton:
+                text: 'Next Meal'
+                back_color_normal: rgba('#3c0478')
+                on_release:
+                    galletastatus.text = ''
+                    root.manager.transition.direction = "up"
+                    root.manager.current = 'windowmealegg'
+            SmoothButton:
+                text: 'Return'
+                back_color_normal: rgba('#3c0478')
+                on_press:
+                    galletastatus.text = ''
+                    root.manager.transition.direction = "right"
+                    root.manager.current = 'windowmain'
+
+<AddNewMealWindow>:
+    name: 'windowaddnewmeal'
+    BoxLayout:
+        orientation: 'vertical'
+        padding: 50, 50
+        spacing: 20
+
+        Label:
+            font_size: 50
+            bold: True
+            text: 'ADD NEW MEAL DATA'
+        TextInput:
+            size_hint_y:None
+            height:40
+            multiline: False
+            id: newmealname
+            hint_text: 'Food Name'
+            on_text_validate: newmealcalories.focus = True
+        TextInput:
+            size_hint_y:None
+            height:40
+            multiline: False
+            id: newmealcalories
+            hint_text: 'Calories'
+        SmoothButton:
+            text: 'Add Meal'
+            on_release:
+                root.insert_newmeal()
+        SmoothButton:
+            text: 'Return'
+            on_release:
+                newmealstatus.text = ''
+                root.manager.transition.direction = "right"
+                root.manager.current = 'windowmain'
+        Label:
+            id: newmealstatus
+            markup: True
+            text: ''
